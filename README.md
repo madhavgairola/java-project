@@ -195,13 +195,6 @@ SmartElectricityMonitor/
 - **Concepts:** Core OOP, Multithreading, Collections, Exception Handling
 - **Dashboard:** HTML5, CSS3, Vanilla JavaScript
 - **No external libraries or frameworks used**
-
----
-
-## 👥 Authors
-
-- Madhav Gairola
-
 ---
 
 ## 📄 License
