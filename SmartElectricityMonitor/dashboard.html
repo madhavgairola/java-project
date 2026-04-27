@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Electricity Monitor Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            color: var(--accent-green);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-top: 0;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .consumption {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            color: var(--accent-blue);
+        }
+
+        .alert-high {
+            color: var(--accent-red);
+            font-weight: bold;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background-color: rgba(239, 68, 68, 0.1);
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .alert-green {
+            color: var(--accent-green);
+            font-weight: bold;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background-color: rgba(16, 185, 129, 0.1);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .ranking-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .ranking-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .ranking-list li:last-child {
+            border-bottom: none;
+        }
+
+        .rank-1 {
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Smart Electricity Monitor</h1>
+        <p class="subtitle">Live Campus Sustainability Dashboard</p>
+    </header>
+
+    <div class="dashboard">
+        <!-- Room 101 -->
+        <div class="card">
+            <h2>Room 101 (Hostel)</h2>
+            <div class="consumption" id="room101-usage">0.0 kWh</div>
+            <div class="stat-row">
+                <span>Appliances:</span>
+                <span>1 AC, 1 Fan, 1 Light</span>
+            </div>
+            <div class="stat-row">
+                <span>Status:</span>
+                <span style="color: var(--accent-green)">Optimal</span>
+            </div>
+        </div>
+
+        <!-- Room 202 -->
+        <div class="card">
+            <h2>Room 202 (Classroom)</h2>
+            <div class="consumption" id="room202-usage">0.0 kWh</div>
+            <div class="stat-row">
+                <span>Appliances:</span>
+                <span>1 AC, 2 Fans, 2 Lights</span>
+            </div>
+            <div id="room202-alert" class="alert-high" style="display: none;">
+                ⚠️ High Usage Alert!
+            </div>
+        </div>
+
+        <!-- Green Room Ranking -->
+        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto; width: 100%;">
+            <h2>🏆 Green Room Rankings</h2>
+            <ul class="ranking-list">
+                <li class="rank-1">
+                    <span>1. Room 101 (Hostel)</span>
+                    <span id="rank1-val">0 kWh</span>
+                </li>
+                <li>
+                    <span>2. Room 303 (Office)</span>
+                    <span id="rank2-val">0 kWh</span>
+                </li>
+                <li>
+                    <span>3. Room 202 (Classroom)</span>
+                    <span id="rank3-val">0 kWh</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Simulation data similar to Java logic
+        const target101 = 360 + 27 + 3.6; // ~390.6 kWh
+        const target202 = 360 + 36 + 12;  // ~408 kWh
+        
+        let current101 = 0;
+        let current202 = 0;
+
+        function animateValue(id, target, duration, isAlert) {
+            const obj = document.getElementById(id);
+            const start = 0;
+            const increment = target / (duration / 50);
+            
+            const timer = setInterval(() => {
+                current101 = id === 'room101-usage' ? current101 + increment : current101;
+                current202 = id === 'room202-usage' ? current202 + increment : current202;
+                
+                let val = id === 'room101-usage' ? current101 : current202;
+                
+                if (val >= target) {
+                    val = target;
+                    clearInterval(timer);
+                    if (isAlert) {
+                        document.getElementById('room202-alert').style.display = 'block';
+                    }
+                    updateRankings();
+                }
+                obj.innerHTML = val.toFixed(1) + " kWh";
+            }, 50);
+        }
+
+        function updateRankings() {
+            document.getElementById('rank1-val').innerText = current101.toFixed(1) + " kWh";
+            document.getElementById('rank3-val').innerText = current202.toFixed(1) + " kWh";
+            document.getElementById('rank2-val').innerText = "395.2 kWh"; // static for office
+        }
+
+        window.onload = () => {
+            animateValue("room101-usage", 390.6, 2000, false);
+            animateValue("room202-usage", 408.0, 2500, true);
+        };
+    </script>
+</body>
+</html>
