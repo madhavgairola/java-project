@@ -283,8 +283,8 @@
 
     <div class="timer-bar">
         <div class="live-dot"></div>
-        <span>MONITORING</span>
-        <span id="timer">00:00</span>
+        <span>LIVE</span>
+        <span id="clock">--:--:--</span>
     </div>
 
     <div class="dashboard-grid">
@@ -430,15 +430,17 @@
             requestAnimationFrame(update);
         }
 
-        // Live elapsed timer
-        const timerEl = document.getElementById('timer');
-        const timerStart = Date.now();
-        setInterval(() => {
-            const elapsed = Math.floor((Date.now() - timerStart) / 1000);
-            const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
-            const secs = String(elapsed % 60).padStart(2, '0');
-            timerEl.textContent = mins + ':' + secs;
-        }, 1000);
+        // Live real-time clock
+        const clockEl = document.getElementById('clock');
+        function updateClock() {
+            const now = new Date();
+            const hrs = String(now.getHours()).padStart(2, '0');
+            const mins = String(now.getMinutes()).padStart(2, '0');
+            const secs = String(now.getSeconds()).padStart(2, '0');
+            clockEl.textContent = hrs + ':' + mins + ':' + secs;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
 
         // Start animations on load with slight staggers
         window.addEventListener('DOMContentLoaded', () => {
