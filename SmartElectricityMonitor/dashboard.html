@@ -283,8 +283,8 @@
 
     <div class="timer-bar">
         <div class="live-dot"></div>
-        <span>LIVE</span>
-        <span id="clock">--:--:--</span>
+        <span>SIMULATION</span>
+        <span id="clock">00:00:00</span>
     </div>
 
     <div class="dashboard-grid">
@@ -430,24 +430,40 @@
             requestAnimationFrame(update);
         }
 
-        // Live real-time clock
+        // Simulated 24-hour clock synced with kWh animation
+        // 24 hours (86400 seconds) compressed into 20 real seconds
         const clockEl = document.getElementById('clock');
-        function updateClock() {
-            const now = new Date();
-            const hrs = String(now.getHours()).padStart(2, '0');
-            const mins = String(now.getMinutes()).padStart(2, '0');
-            const secs = String(now.getSeconds()).padStart(2, '0');
-            clockEl.textContent = hrs + ':' + mins + ':' + secs;
-        }
-        updateClock();
-        setInterval(updateClock, 1000);
+        const SIM_DURATION = 20000; // 20 seconds real time
+        const TOTAL_SIM_SECONDS = 86400; // 24 hours in seconds
+        let simStart = null;
 
-        // Start animations on load with slight staggers
+        function updateSimClock() {
+            if (!simStart) return;
+            const elapsed = Date.now() - simStart;
+            const progress = Math.min(elapsed / SIM_DURATION, 1);
+            const simSeconds = Math.floor(progress * TOTAL_SIM_SECONDS);
+
+            const hrs = String(Math.floor(simSeconds / 3600) % 24).padStart(2, '0');
+            const mins = String(Math.floor((simSeconds % 3600) / 60)).padStart(2, '0');
+            const secs = String(simSeconds % 60).padStart(2, '0');
+            clockEl.textContent = hrs + ':' + mins + ':' + secs;
+
+            if (progress < 1) {
+                requestAnimationFrame(updateSimClock);
+            } else {
+                clockEl.textContent = '23:59:59';
+            }
+        }
+
+        // Start everything together
         window.addEventListener('DOMContentLoaded', () => {
-            // Values from the Java simulation output (slower for presentation)
-            setTimeout(() => animateData('303', 253.8, 15000, 300), 500);
-            setTimeout(() => animateData('101', 390.6, 18000, 400), 1500);
-            setTimeout(() => animateData('202', 408.0, 20000, 400), 2500);
+            simStart = Date.now();
+            requestAnimationFrame(updateSimClock);
+
+            // kWh animations run over the same ~20 second window
+            setTimeout(() => animateData('303', 253.8, 18000, 300), 500);
+            setTimeout(() => animateData('101', 390.6, 19000, 400), 500);
+            setTimeout(() => animateData('202', 408.0, 20000, 400), 500);
         });
     </script>
 </body>
