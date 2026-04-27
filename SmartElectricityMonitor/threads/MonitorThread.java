@@ -18,8 +18,8 @@ public class MonitorThread extends Thread {
     @Override
     public void run() {
         try {
-            // Simulating real-time monitoring delay
-            Thread.sleep((long) (Math.random() * 1500));
+            // Simulating real-time monitoring delay (Slower for Viva presentation)
+            Thread.sleep(2000 + (long) (Math.random() * 3000));
             double consumption = room.getTotalMonthlyConsumption();
             System.out.println("[Monitor] Room " + room.getRoomNumber() + " analyzed. Consumption: " + String.format("%.2f", consumption) + " kWh");
             
