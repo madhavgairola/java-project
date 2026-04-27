@@ -28,12 +28,7 @@ This system acts as a **smart monitoring layer** that:
 ### Prerequisites
 
 - **Java JDK 17+** installed on your system
-- Verify installation by running:
-  ```
-  java -version
-  javac -version
-  ```
-- If not installed, download from [Microsoft OpenJDK](https://learn.microsoft.com/en-us/java/openjdk/download) or run:
+- If not installed, run:
   ```
   winget install Microsoft.OpenJDK.17
   ```
@@ -43,22 +38,35 @@ This system acts as a **smart monitoring layer** that:
 1. **Clone the repository**
    ```bash
    git clone https://github.com/madhavgairola/java-project.git
-   cd java-project/SmartElectricityMonitor
+   cd java-project
    ```
 
-2. **Compile all Java files**
-   ```bash
+2. **If using PowerShell and `javac` is not recognized**, run this first to fix the PATH:
+   ```powershell
+   $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+   ```
+
+3. **Navigate to the project folder, compile, and run:**
+   ```powershell
+   cd SmartElectricityMonitor
    javac -d bin exceptions/*.java interfaces/*.java models/*.java services/*.java threads/*.java main/*.java
-   ```
-
-3. **Run the program**
-   ```bash
    java -cp bin main.Main
    ```
 
+4. After the program finishes, it will **automatically generate `dashboard.html`** with real computed values from the Java simulation. Open it in your browser to see the visual dashboard.
+
+### Quick Copy-Paste (All Commands at Once)
+
+```powershell
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+cd SmartElectricityMonitor
+javac -d bin exceptions/*.java interfaces/*.java models/*.java services/*.java threads/*.java main/*.java
+java -cp bin main.Main
+```
+
 ### Running the Dashboard UI
 
-Simply open the `dashboard.html` file in any web browser by double-clicking it. It provides a visual simulation of the monitoring system with animated kWh counters synchronized to a 24-hour time-lapse clock.
+After running the Java program, open the generated `dashboard.html` file in any web browser. Java generates this file using `FileWriter` with real computed kWh values injected into the JavaScript — connecting the Java backend to the visual frontend.
 
 ---
 
