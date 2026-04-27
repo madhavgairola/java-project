@@ -4,6 +4,7 @@ import models.*;
 import exceptions.InvalidUsageException;
 import interfaces.AlertSystem;
 import services.ReportGenerator;
+import services.DashboardGenerator;
 import threads.MonitorThread;
 
 import java.util.HashMap;
@@ -91,5 +92,8 @@ public class Main {
 
         // Generating Final Ranking Report
         ReportGenerator.generateGreenRoomRanking(campusRooms);
+
+        // Java I/O: Generate the visual HTML dashboard with real computed values
+        DashboardGenerator.generateDashboard(campusRooms, "dashboard.html");
     }
 }
