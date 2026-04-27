@@ -3,227 +3,403 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Electricity Monitor Dashboard</title>
+    <title>Smart Campus Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg-base: #0a0a0a;
+            --surface: rgba(255, 255, 255, 0.03);
+            --surface-hover: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            
             --accent-green: #10b981;
+            --accent-green-glow: rgba(16, 185, 129, 0.2);
             --accent-red: #ef4444;
-            --accent-blue: #3b82f6;
+            --accent-red-glow: rgba(239, 68, 68, 0.2);
+            
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 2rem;
+            padding: 4rem 2rem;
+            line-height: 1.5;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.04), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(239, 68, 68, 0.04), transparent 25%);
         }
 
         header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
+            animation: fadeInDown 1s ease-out;
         }
 
         h1 {
-            color: var(--accent-green);
             font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.05em;
             margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         p.subtitle {
-            color: var(--text-muted);
-            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 300;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
         }
 
-        .dashboard {
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1100px;
+            margin-bottom: 3rem;
         }
 
         .card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            background: var(--surface-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
         }
 
-        .card h2 {
-            font-size: 1.25rem;
-            margin-top: 0;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-        }
+        /* Staggered animation delays */
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
 
-        .stat-row {
+        .card-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
+            align-items: center;
+            margin-bottom: 2rem;
         }
 
-        .consumption {
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 1rem 0;
-            color: var(--accent-blue);
+        .room-title {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-secondary);
         }
 
-        .alert-high {
-            color: var(--accent-red);
-            font-weight: bold;
-            margin-top: 1rem;
-            padding: 0.5rem;
-            background-color: rgba(239, 68, 68, 0.1);
-            border-radius: 6px;
-            text-align: center;
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .status-dot.active-green {
+            background-color: var(--accent-green);
+            box-shadow: 0 0 12px var(--accent-green-glow);
         }
         
-        .alert-green {
-            color: var(--accent-green);
-            font-weight: bold;
-            margin-top: 1rem;
-            padding: 0.5rem;
-            background-color: rgba(16, 185, 129, 0.1);
-            border-radius: 6px;
-            text-align: center;
+        .status-dot.active-red {
+            background-color: var(--accent-red);
+            box-shadow: 0 0 12px var(--accent-red-glow);
+            animation: pulse-red 2s infinite;
         }
 
-        .ranking-list {
-            list-style: none;
-            padding: 0;
+        .consumption-value {
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: -0.04em;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
         }
 
-        .ranking-list li {
+        .unit {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: normal;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+            transition: width 2s cubic-bezier(0.16, 1, 0.3, 1), background-color 1s ease;
+        }
+
+        .meta-info {
             display: flex;
             justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #334155;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
         }
 
-        .ranking-list li:last-child {
+        /* Leaderboard Specifics */
+        .leaderboard-card {
+            grid-column: 1 / -1;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .leaderboard-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            transition: var(--transition);
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .leaderboard-item:last-child {
             border-bottom: none;
         }
 
-        .rank-1 {
-            color: var(--accent-green);
-            font-weight: bold;
+        .rank-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
+        .rank-number {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            width: 24px;
+        }
+
+        .winner-text {
+            color: var(--accent-green);
+            font-weight: 500;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>Smart Electricity Monitor</h1>
-        <p class="subtitle">Live Campus Sustainability Dashboard</p>
+        <p class="subtitle">Live Campus Telemetry</p>
     </header>
 
-    <div class="dashboard">
-        <!-- Room 101 -->
+    <div class="dashboard-grid">
+        <!-- Room 303 (Office) -->
         <div class="card">
-            <h2>Room 101 (Hostel)</h2>
-            <div class="consumption" id="room101-usage">0.0 kWh</div>
-            <div class="stat-row">
-                <span>Appliances:</span>
-                <span>1 AC, 1 Fan, 1 Light</span>
+            <div class="card-header">
+                <span class="room-title">Room 303 (Office)</span>
+                <div class="status-dot" id="dot-303"></div>
             </div>
-            <div class="stat-row">
-                <span>Status:</span>
-                <span style="color: var(--accent-green)">Optimal</span>
+            <div class="consumption-value">
+                <span id="val-303">0.0</span><span class="unit">kWh</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="prog-303"></div>
+            </div>
+            <div class="meta-info">
+                <span>Current Usage</span>
+                <span>Threshold: 300</span>
             </div>
         </div>
 
-        <!-- Room 202 -->
+        <!-- Room 101 (Hostel) -->
         <div class="card">
-            <h2>Room 202 (Classroom)</h2>
-            <div class="consumption" id="room202-usage">0.0 kWh</div>
-            <div class="stat-row">
-                <span>Appliances:</span>
-                <span>1 AC, 2 Fans, 2 Lights</span>
+            <div class="card-header">
+                <span class="room-title">Room 101 (Hostel)</span>
+                <div class="status-dot" id="dot-101"></div>
             </div>
-            <div id="room202-alert" class="alert-high" style="display: none;">
-                ⚠️ High Usage Alert!
+            <div class="consumption-value">
+                <span id="val-101">0.0</span><span class="unit">kWh</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="prog-101"></div>
+            </div>
+            <div class="meta-info">
+                <span>Current Usage</span>
+                <span>Threshold: 400</span>
             </div>
         </div>
 
-        <!-- Green Room Ranking -->
-        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto; width: 100%;">
-            <h2>🏆 Green Room Rankings</h2>
-            <ul class="ranking-list">
-                <li class="rank-1">
-                    <span>1. Room 101 (Hostel)</span>
-                    <span id="rank1-val">0 kWh</span>
+        <!-- Room 202 (Classroom) -->
+        <div class="card">
+            <div class="card-header">
+                <span class="room-title">Room 202 (Classroom)</span>
+                <div class="status-dot" id="dot-202"></div>
+            </div>
+            <div class="consumption-value">
+                <span id="val-202" style="color: var(--text-primary)">0.0</span><span class="unit">kWh</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="prog-202"></div>
+            </div>
+            <div class="meta-info">
+                <span id="msg-202">Current Usage</span>
+                <span>Threshold: 400</span>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="card leaderboard-card">
+            <div class="leaderboard-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <span class="room-title" style="margin:0">Green Room Ranking</span>
+            </div>
+            <ul class="leaderboard-list">
+                <li class="leaderboard-item winner-text">
+                    <div class="rank-info">
+                        <span class="rank-number">01</span>
+                        <span>Room 303 (Office)</span>
+                    </div>
+                    <span id="rank-1-val">0.00 kWh</span>
                 </li>
-                <li>
-                    <span>2. Room 303 (Office)</span>
-                    <span id="rank2-val">0 kWh</span>
+                <li class="leaderboard-item">
+                    <div class="rank-info">
+                        <span class="rank-number">02</span>
+                        <span>Room 101 (Hostel)</span>
+                    </div>
+                    <span id="rank-2-val">0.00 kWh</span>
                 </li>
-                <li>
-                    <span>3. Room 202 (Classroom)</span>
-                    <span id="rank3-val">0 kWh</span>
+                <li class="leaderboard-item">
+                    <div class="rank-info">
+                        <span class="rank-number">03</span>
+                        <span>Room 202 (Classroom)</span>
+                    </div>
+                    <span id="rank-3-val">0.00 kWh</span>
                 </li>
             </ul>
         </div>
     </div>
 
     <script>
-        // Simulation data similar to Java logic
-        const target101 = 360 + 27 + 3.6; // ~390.6 kWh
-        const target202 = 360 + 36 + 12;  // ~408 kWh
-        
-        let current101 = 0;
-        let current202 = 0;
+        // High-performance animation using requestAnimationFrame
+        const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
 
-        function animateValue(id, target, duration, isAlert) {
-            const obj = document.getElementById(id);
-            const start = 0;
-            const increment = target / (duration / 50);
+        function animateData(id, targetValue, duration, maxThreshold) {
+            const valEl = document.getElementById(`val-${id}`);
+            const progEl = document.getElementById(`prog-${id}`);
+            const dotEl = document.getElementById(`dot-${id}`);
+            const msgEl = document.getElementById(`msg-${id}`);
             
-            const timer = setInterval(() => {
-                current101 = id === 'room101-usage' ? current101 + increment : current101;
-                current202 = id === 'room202-usage' ? current202 + increment : current202;
+            const startValue = 0;
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeProgress = easeOutQuart(progress);
                 
-                let val = id === 'room101-usage' ? current101 : current202;
+                const currentVal = startValue + (targetValue - startValue) * easeProgress;
                 
-                if (val >= target) {
-                    val = target;
-                    clearInterval(timer);
-                    if (isAlert) {
-                        document.getElementById('room202-alert').style.display = 'block';
+                // Update text
+                valEl.textContent = currentVal.toFixed(1);
+                
+                // Update progress bar width
+                const percentage = Math.min((currentVal / maxThreshold) * 100, 100);
+                progEl.style.width = percentage + '%';
+
+                // Status Logic
+                if (currentVal >= maxThreshold) {
+                    progEl.style.backgroundColor = 'var(--accent-red)';
+                    valEl.style.color = 'var(--accent-red)';
+                    dotEl.className = 'status-dot active-red';
+                    if(msgEl) {
+                        msgEl.textContent = 'Limit Exceeded';
+                        msgEl.style.color = 'var(--accent-red)';
                     }
-                    updateRankings();
+                } else if (progress > 0.5) {
+                    progEl.style.backgroundColor = 'var(--accent-green)';
+                    dotEl.className = 'status-dot active-green';
+                } else {
+                    progEl.style.backgroundColor = 'var(--text-secondary)';
                 }
-                obj.innerHTML = val.toFixed(1) + " kWh";
-            }, 50);
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    // Update leaderboard when animations finish
+                    if(id === '303') document.getElementById('rank-1-val').textContent = targetValue.toFixed(2) + ' kWh';
+                    if(id === '101') document.getElementById('rank-2-val').textContent = targetValue.toFixed(2) + ' kWh';
+                    if(id === '202') document.getElementById('rank-3-val').textContent = targetValue.toFixed(2) + ' kWh';
+                }
+            }
+            
+            requestAnimationFrame(update);
         }
 
-        function updateRankings() {
-            document.getElementById('rank1-val').innerText = current101.toFixed(1) + " kWh";
-            document.getElementById('rank3-val').innerText = current202.toFixed(1) + " kWh";
-            document.getElementById('rank2-val').innerText = "395.2 kWh"; // static for office
-        }
-
-        window.onload = () => {
-            animateValue("room101-usage", 390.6, 2000, false);
-            animateValue("room202-usage", 408.0, 2500, true);
-        };
+        // Start animations on load with slight staggers
+        window.addEventListener('DOMContentLoaded', () => {
+            // Values from the Java simulation output
+            setTimeout(() => animateData('303', 253.8, 2000, 300), 100);
+            setTimeout(() => animateData('101', 390.6, 2500, 400), 300);
+            setTimeout(() => animateData('202', 408.0, 3000, 400), 500);
+        });
     </script>
 </body>
 </html>
