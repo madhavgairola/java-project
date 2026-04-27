@@ -34,8 +34,8 @@ public class ReportGenerator {
         System.out.println(report.toString());
         
         if (!roomList.isEmpty()) {
-            System.out.println("🏆 The Greenest Room is Room " + roomList.get(0).getRoomNumber() + " with lowest consumption!");
-            System.out.println("🌱 Thank you for supporting a sustainable campus!");
+            System.out.println("[WINNER] The Greenest Room is Room " + roomList.get(0).getRoomNumber() + " with lowest consumption!");
+            System.out.println("[ECO-FRIENDLY] Thank you for supporting a sustainable campus!");
         }
     }
 }

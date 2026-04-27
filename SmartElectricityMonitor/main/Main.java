@@ -14,12 +14,12 @@ public class Main {
     static class CampusAlertSystem implements AlertSystem {
         @Override
         public void generateAlert(double totalConsumption, String roomName) {
-            System.out.println("\n⚠️ ALERT: High Electricity Usage in Room " + roomName + "! (" + String.format("%.2f", totalConsumption) + " kWh)");
+            System.out.println("\n[!] ALERT: High Electricity Usage in Room " + roomName + "! (" + String.format("%.2f", totalConsumption) + " kWh)");
         }
 
         @Override
         public void provideRecommendations() {
-            System.out.println("💡 RECOMMENDATION: Turn off ACs/Lights when not in use. Opt for natural sunlight to save energy and reduce carbon footprint.");
+            System.out.println("[*] RECOMMENDATION: Turn off ACs/Lights when not in use. Opt for natural sunlight to save energy and reduce carbon footprint.");
         }
     }
 
@@ -62,7 +62,7 @@ public class Main {
             campusRooms.put("303", officeRoom);
 
         } catch (InvalidUsageException e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("[ERROR]: " + e.getMessage());
         }
 
         System.out.println("--- Starting Live Room Monitoring ---");
