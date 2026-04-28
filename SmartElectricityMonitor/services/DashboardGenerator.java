@@ -47,8 +47,8 @@ public class DashboardGenerator {
         // ---- TIMER BAR ----
         html.append("    <div class=\"timer-bar\">\n");
         html.append("        <div class=\"live-dot\"></div>\n");
-        html.append("        <span>SIMULATION</span>\n");
-        html.append("        <span id=\"clock\">00:00:00</span>\n");
+        html.append("        <span>MONTHLY SIMULATION</span>\n");
+        html.append("        <span id=\"clock\">Day 01 / 30</span>\n");
         html.append("    </div>\n\n");
 
         // ---- ROOM CARDS (dynamically generated from Java data) ----
@@ -155,22 +155,19 @@ public class DashboardGenerator {
         }
         html.append("        }\n\n");
 
-        // Simulated clock
+        // Simulated 30-day monthly counter (matches monthly kWh calculation)
         html.append("        const clockEl = document.getElementById('clock');\n");
         html.append("        const SIM_DURATION = 20000;\n");
-        html.append("        const TOTAL_SIM_SECONDS = 86400;\n");
+        html.append("        const TOTAL_DAYS = 30;\n");
         html.append("        let simStart = null;\n\n");
         html.append("        function updateSimClock() {\n");
         html.append("            if (!simStart) return;\n");
         html.append("            const elapsed = Date.now() - simStart;\n");
         html.append("            const progress = Math.min(elapsed / SIM_DURATION, 1);\n");
-        html.append("            const simSeconds = Math.floor(progress * TOTAL_SIM_SECONDS);\n");
-        html.append("            const hrs = String(Math.floor(simSeconds / 3600) % 24).padStart(2, '0');\n");
-        html.append("            const mins = String(Math.floor((simSeconds % 3600) / 60)).padStart(2, '0');\n");
-        html.append("            const secs = String(simSeconds % 60).padStart(2, '0');\n");
-        html.append("            clockEl.textContent = hrs + ':' + mins + ':' + secs;\n");
+        html.append("            const currentDay = Math.max(1, Math.ceil(progress * TOTAL_DAYS));\n");
+        html.append("            clockEl.textContent = 'Day ' + String(currentDay).padStart(2, '0') + ' / 30';\n");
         html.append("            if (progress < 1) { requestAnimationFrame(updateSimClock); }\n");
-        html.append("            else { clockEl.textContent = '23:59:59'; }\n");
+        html.append("            else { clockEl.textContent = 'Day 30 / 30'; }\n");
         html.append("        }\n\n");
 
         // DOMContentLoaded — inject real values from Java computation
