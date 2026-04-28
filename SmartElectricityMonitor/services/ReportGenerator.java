@@ -6,11 +6,8 @@ import java.util.*;
 public class ReportGenerator {
 
     public static void generateGreenRoomRanking(HashMap<String, Room> rooms) {
-        // Java Collections: Converting map values to a List for sorting
         List<Room> roomList = new ArrayList<>(rooms.values());
         
-        // Sorting rooms based on usage efficiency (lowest % of threshold first)
-        // A room using 78% of its threshold is greener than one using 90%
         Collections.sort(roomList, new Comparator<Room>() {
             @Override
             public int compare(Room r1, Room r2) {
@@ -18,7 +15,6 @@ public class ReportGenerator {
             }
         });
 
-        // String Handling: Using StringBuilder for efficient string concatenation
         StringBuilder report = new StringBuilder();
         report.append("\n==================================================\n");
         report.append("        GREEN ROOM RANKING REPORT\n");

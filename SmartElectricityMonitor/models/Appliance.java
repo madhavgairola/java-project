@@ -5,11 +5,10 @@ import exceptions.InvalidUsageException;
 public abstract class Appliance {
     protected String name;
     protected String roomNumber;
-    protected double powerRatingKw; // in Kilowatts
+    protected double powerRatingKw;
     protected double dailyUsageHours;
 
     public Appliance(String name, String roomNumber, double powerRatingKw, double dailyUsageHours) throws InvalidUsageException {
-        // Exception Handling: Checking for invalid inputs
         if (powerRatingKw <= 0 || dailyUsageHours < 0 || dailyUsageHours > 24) {
             throw new InvalidUsageException("Invalid power rating or usage hours for appliance: " + name + " in room " + roomNumber);
         }
@@ -19,7 +18,6 @@ public abstract class Appliance {
         this.dailyUsageHours = dailyUsageHours;
     }
 
-    // Abstraction: Abstract method to be implemented by child classes
     public abstract double calculateMonthlyConsumption();
 
     public String getName() { return name; }

@@ -1,7 +1,6 @@
 package models;
 import exceptions.InvalidUsageException;
 
-// Inheritance: Fan extends Appliance
 public class Fan extends Appliance {
     public Fan(String roomNumber, double powerRatingKw, double dailyUsageHours) throws InvalidUsageException {
         super("Fan", roomNumber, powerRatingKw, dailyUsageHours);

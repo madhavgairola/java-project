@@ -11,7 +11,6 @@ import java.util.HashMap;
 
 public class Main {
     
-    // Implementing Interface
     static class CampusAlertSystem implements AlertSystem {
         @Override
         public void generateAlert(double totalConsumption, String roomName) {
@@ -29,18 +28,14 @@ public class Main {
         System.out.println("    SMART ELECTRICITY USAGE MONITOR SYSTEM");
         System.out.println("==================================================\n");
 
-        // Java Collections: HashMap to store rooms efficiently
         HashMap<String, Room> campusRooms = new HashMap<>();
 
         try {
-            // Object Creation — each room has its own threshold based on room type
-            Room hostelRoom = new Room("101 (Hostel)", 500);       // Hostel: AC + personal appliances
-            Room classRoom = new Room("202 (Classroom)", 400);     // Classroom: threshold exceeded!
-            Room officeRoom = new Room("303 (Office)", 50);        // Office: only fans and lights
+            Room hostelRoom = new Room("101 (Hostel)", 500);
+            Room classRoom = new Room("202 (Classroom)", 400);
+            Room officeRoom = new Room("303 (Office)", 50);
 
-            // Adding appliances
-            // AC: 1.5 kW, Fan: 0.075 kW, Light: 0.020 kW
-            hostelRoom.addAppliance(new AC("101 (Hostel)", 1.5, 8)); // 8 hours of AC daily
+            hostelRoom.addAppliance(new AC("101 (Hostel)", 1.5, 8));
             hostelRoom.addAppliance(new Fan("101 (Hostel)", 0.075, 12));
             hostelRoom.addAppliance(new Light("101 (Hostel)", 0.020, 6));
 
@@ -53,10 +48,6 @@ public class Main {
             officeRoom.addAppliance(new Fan("303 (Office)", 0.075, 9));
             officeRoom.addAppliance(new Light("303 (Office)", 0.020, 9));
             officeRoom.addAppliance(new Light("303 (Office)", 0.020, 9));
-            
-            // Exception Handling Demo: Deliberately passing invalid usage hours (e.g. 25 hours a day)
-            // Uncommenting the below line will trigger the InvalidUsageException
-            // officeRoom.addAppliance(new Light("303 (Office)", 0.020, 25));
 
             campusRooms.put("101", hostelRoom);
             campusRooms.put("202", classRoom);
@@ -69,7 +60,6 @@ public class Main {
         System.out.println("--- Starting Live Room Monitoring ---");
         AlertSystem alertSystem = new CampusAlertSystem();
 
-        // Multithreading: Each thread uses the room's own threshold
         MonitorThread t1 = new MonitorThread(campusRooms.get("101"), alertSystem);
         MonitorThread t2 = new MonitorThread(campusRooms.get("202"), alertSystem);
         MonitorThread t3 = new MonitorThread(campusRooms.get("303"), alertSystem);
@@ -78,7 +68,6 @@ public class Main {
         t2.start();
         t3.start();
 
-        // Wait for all monitoring threads to finish
         try {
             t1.join();
             t2.join();
@@ -87,10 +76,7 @@ public class Main {
             System.out.println("Main thread interrupted.");
         }
 
-        // Generating Final Ranking Report
         ReportGenerator.generateGreenRoomRanking(campusRooms);
-
-        // Java I/O: Generate the visual HTML dashboard with real computed values
         DashboardGenerator.generateDashboard(campusRooms, "dashboard.html");
     }
 }

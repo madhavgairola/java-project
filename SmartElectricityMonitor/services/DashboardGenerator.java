@@ -5,15 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * DashboardGenerator - Generates an HTML dashboard file with real computed values.
- * This connects our Java backend logic to a visual frontend report.
- * Uses: FileWriter (Java I/O), StringBuilder (String Handling), Collections (Sorting)
- */
 public class DashboardGenerator {
 
     public static void generateDashboard(HashMap<String, Room> rooms, String filePath) {
-        // Sort rooms by efficiency % for the leaderboard (lowest % = greenest)
         List<Room> sortedRooms = new ArrayList<>(rooms.values());
         Collections.sort(sortedRooms, new Comparator<Room>() {
             @Override
@@ -22,13 +16,10 @@ public class DashboardGenerator {
             }
         });
 
-        // Get all rooms as a list (unsorted) for the cards
         List<Room> allRooms = new ArrayList<>(rooms.values());
 
-        // String Handling: Using StringBuilder to build the entire HTML report
         StringBuilder html = new StringBuilder();
 
-        // ---- HTML HEAD ----
         html.append("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n");
         html.append("    <meta charset=\"UTF-8\">\n");
         html.append("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
@@ -38,20 +29,17 @@ public class DashboardGenerator {
         html.append(getCSS());
         html.append("    </style>\n</head>\n<body>\n\n");
 
-        // ---- HEADER ----
         html.append("    <header>\n");
         html.append("        <h1>Smart Electricity Monitor</h1>\n");
         html.append("        <p class=\"subtitle\">Live Campus Telemetry</p>\n");
         html.append("    </header>\n\n");
 
-        // ---- TIMER BAR ----
         html.append("    <div class=\"timer-bar\">\n");
         html.append("        <div class=\"live-dot\"></div>\n");
         html.append("        <span>MONTHLY SIMULATION</span>\n");
         html.append("        <span id=\"clock\">1/April/2026</span>\n");
         html.append("    </div>\n\n");
 
-        // ---- ROOM CARDS (dynamically generated from Java data) ----
         html.append("    <div class=\"dashboard-grid\">\n");
 
         int cardIndex = 0;
@@ -82,7 +70,6 @@ public class DashboardGenerator {
             cardIndex++;
         }
 
-        // ---- LEADERBOARD (sorted by Java's Collections.sort) ----
         html.append("        <div class=\"card leaderboard-card\">\n");
         html.append("            <div class=\"leaderboard-header\">\n");
         html.append("                <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"var(--text-secondary)\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"></polygon></svg>\n");
@@ -107,7 +94,6 @@ public class DashboardGenerator {
         html.append("        </div>\n");
         html.append("    </div>\n\n");
 
-        // ---- JAVASCRIPT (with real Java-computed values injected) ----
         html.append("    <script>\n");
         html.append("        const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);\n\n");
 
@@ -142,7 +128,6 @@ public class DashboardGenerator {
         html.append("            requestAnimationFrame(update);\n");
         html.append("        }\n\n");
 
-        // Generate the updateRankings function with real sorted values
         html.append("        function updateRankings() {\n");
         rank = 1;
         for (Room room : sortedRooms) {
@@ -154,7 +139,6 @@ public class DashboardGenerator {
         }
         html.append("        }\n\n");
 
-        // Simulated 30-day monthly counter showing dates like "01 April" to "30 April"
         html.append("        const clockEl = document.getElementById('clock');\n");
         html.append("        const SIM_DURATION = 20000;\n");
         html.append("        const TOTAL_DAYS = 30;\n");
@@ -169,7 +153,6 @@ public class DashboardGenerator {
         html.append("            else { clockEl.textContent = '30/April/2026'; }\n");
         html.append("        }\n\n");
 
-        // DOMContentLoaded — inject real values from Java computation
         html.append("        window.addEventListener('DOMContentLoaded', () => {\n");
         html.append("            simStart = Date.now();\n");
         html.append("            requestAnimationFrame(updateSimClock);\n\n");
@@ -183,8 +166,6 @@ public class DashboardGenerator {
             String roomId = "room" + cardIndex;
             int duration = 15000 + (cardIndex * 2000);
 
-            html.append("            // Room ").append(room.getRoomNumber())
-                .append(" — Value computed by Java: ").append(String.format("%.2f", consumption)).append(" kWh\n");
             html.append("            setTimeout(() => animateData('").append(roomId).append("', ")
                 .append(String.format("%.2f", consumption)).append(", ").append(duration).append(", ")
                 .append(String.format("%.0f", threshold)).append("), ").append(delay).append(");\n");
@@ -195,7 +176,6 @@ public class DashboardGenerator {
         html.append("        });\n");
         html.append("    </script>\n</body>\n</html>\n");
 
-        // ---- FILE I/O: Write the generated HTML to disk ----
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(html.toString());
             System.out.println("\n[Dashboard] Visual report generated successfully: " + filePath);
@@ -204,10 +184,6 @@ public class DashboardGenerator {
         }
     }
 
-    /**
-     * Returns the CSS styles as a String.
-     * Separated into its own method for code readability.
-     */
     private static String getCSS() {
         StringBuilder css = new StringBuilder();
         css.append("        :root {\n");

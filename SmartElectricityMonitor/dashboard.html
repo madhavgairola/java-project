@@ -209,11 +209,8 @@
             simStart = Date.now();
             requestAnimationFrame(updateSimClock);
 
-            // Room 101 (Hostel) — Value computed by Java: 390.60 kWh
             setTimeout(() => animateData('room0', 390.60, 15000, 500), 500);
-            // Room 202 (Classroom) — Value computed by Java: 408.00 kWh
             setTimeout(() => animateData('room1', 408.00, 17000, 400), 500);
-            // Room 303 (Office) — Value computed by Java: 31.05 kWh
             setTimeout(() => animateData('room2', 31.05, 19000, 50), 500);
         });
     </script>
