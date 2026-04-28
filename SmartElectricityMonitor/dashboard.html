@@ -77,7 +77,7 @@
             </div>
             <div class="meta-info">
                 <span id="msg-room0">Current Usage</span>
-                <span>Threshold: 400</span>
+                <span>Threshold: 500</span>
             </div>
         </div>
 
@@ -94,7 +94,7 @@
             </div>
             <div class="meta-info">
                 <span id="msg-room1">Current Usage</span>
-                <span>Threshold: 400</span>
+                <span>Threshold: 450</span>
             </div>
         </div>
 
@@ -210,9 +210,9 @@
             requestAnimationFrame(updateSimClock);
 
             // Room 101 (Hostel) — Value computed by Java: 390.60 kWh
-            setTimeout(() => animateData('room0', 390.60, 15000, 400), 500);
+            setTimeout(() => animateData('room0', 390.60, 15000, 500), 500);
             // Room 202 (Classroom) — Value computed by Java: 408.00 kWh
-            setTimeout(() => animateData('room1', 408.00, 17000, 400), 500);
+            setTimeout(() => animateData('room1', 408.00, 17000, 450), 500);
             // Room 303 (Office) — Value computed by Java: 31.05 kWh
             setTimeout(() => animateData('room2', 31.05, 19000, 50), 500);
         });

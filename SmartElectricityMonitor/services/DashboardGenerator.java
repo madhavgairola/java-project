@@ -13,12 +13,12 @@ import java.util.*;
 public class DashboardGenerator {
 
     public static void generateDashboard(HashMap<String, Room> rooms, String filePath) {
-        // Sort rooms by consumption for the leaderboard
+        // Sort rooms by efficiency % for the leaderboard (lowest % = greenest)
         List<Room> sortedRooms = new ArrayList<>(rooms.values());
         Collections.sort(sortedRooms, new Comparator<Room>() {
             @Override
             public int compare(Room r1, Room r2) {
-                return Double.compare(r1.getTotalMonthlyConsumption(), r2.getTotalMonthlyConsumption());
+                return Double.compare(r1.getUsagePercentage(), r2.getUsagePercentage());
             }
         });
 
@@ -57,10 +57,7 @@ public class DashboardGenerator {
         int cardIndex = 0;
         for (Room room : allRooms) {
             double consumption = room.getTotalMonthlyConsumption();
-            double threshold = consumption > 300 ? consumption * 0.95 : consumption * 1.2;
-            // Round threshold to a clean number
-            threshold = Math.round(threshold / 50.0) * 50;
-            if (threshold < consumption) threshold = Math.round(consumption / 50.0) * 50;
+            double threshold = room.getThreshold();
 
             String roomId = "room" + cardIndex;
 
@@ -179,9 +176,7 @@ public class DashboardGenerator {
         int delay = 500;
         for (Room room : allRooms) {
             double consumption = room.getTotalMonthlyConsumption();
-            double threshold = consumption > 300 ? consumption * 0.95 : consumption * 1.2;
-            threshold = Math.round(threshold / 50.0) * 50;
-            if (threshold < consumption) threshold = Math.round(consumption / 50.0) * 50;
+            double threshold = room.getThreshold();
 
             String roomId = "room" + cardIndex;
             int duration = 15000 + (cardIndex * 2000);

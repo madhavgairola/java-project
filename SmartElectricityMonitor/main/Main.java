@@ -33,10 +33,10 @@ public class Main {
         HashMap<String, Room> campusRooms = new HashMap<>();
 
         try {
-            // Object Creation
-            Room hostelRoom = new Room("101 (Hostel)");
-            Room classRoom = new Room("202 (Classroom)");
-            Room officeRoom = new Room("303 (Office)");
+            // Object Creation — each room has its own threshold based on room type
+            Room hostelRoom = new Room("101 (Hostel)", 500);       // Hostel: AC + personal appliances
+            Room classRoom = new Room("202 (Classroom)", 450);     // Classroom: AC + multiple lights/fans
+            Room officeRoom = new Room("303 (Office)", 50);        // Office: only fans and lights
 
             // Adding appliances
             // AC: 1.5 kW, Fan: 0.075 kW, Light: 0.020 kW
@@ -68,14 +68,11 @@ public class Main {
 
         System.out.println("--- Starting Live Room Monitoring ---");
         AlertSystem alertSystem = new CampusAlertSystem();
-        
-        // Threshold for alerts (e.g., more than 200 kWh per month triggers an alert)
-        double usageThreshold = 200.0; 
 
-        // Multithreading: Creating threads for concurrent monitoring
-        MonitorThread t1 = new MonitorThread(campusRooms.get("101"), alertSystem, usageThreshold);
-        MonitorThread t2 = new MonitorThread(campusRooms.get("202"), alertSystem, usageThreshold);
-        MonitorThread t3 = new MonitorThread(campusRooms.get("303"), alertSystem, usageThreshold);
+        // Multithreading: Each thread uses the room's own threshold
+        MonitorThread t1 = new MonitorThread(campusRooms.get("101"), alertSystem);
+        MonitorThread t2 = new MonitorThread(campusRooms.get("202"), alertSystem);
+        MonitorThread t3 = new MonitorThread(campusRooms.get("303"), alertSystem);
 
         t1.start();
         t2.start();

@@ -7,12 +7,10 @@ import interfaces.AlertSystem;
 public class MonitorThread extends Thread {
     private Room room;
     private AlertSystem alertSystem;
-    private double threshold;
 
-    public MonitorThread(Room room, AlertSystem alertSystem, double threshold) {
+    public MonitorThread(Room room, AlertSystem alertSystem) {
         this.room = room;
         this.alertSystem = alertSystem;
-        this.threshold = threshold;
     }
 
     @Override
@@ -21,9 +19,10 @@ public class MonitorThread extends Thread {
             // Simulating real-time monitoring delay (Slower for Viva presentation)
             Thread.sleep(2000 + (long) (Math.random() * 3000));
             double consumption = room.getTotalMonthlyConsumption();
-            System.out.println("[Monitor] Room " + room.getRoomNumber() + " analyzed. Consumption: " + String.format("%.2f", consumption) + " kWh");
+            double threshold = room.getThreshold();
+            System.out.println("[Monitor] Room " + room.getRoomNumber() + " analyzed. Consumption: " + String.format("%.2f", consumption) + " kWh (Threshold: " + String.format("%.0f", threshold) + " kWh)");
             
-            // Generate alert if usage exceeds threshold
+            // Generate alert if usage exceeds the room's own threshold
             if (consumption > threshold) {
                 alertSystem.generateAlert(consumption, room.getRoomNumber());
                 alertSystem.provideRecommendations();
