@@ -94,7 +94,7 @@
             </div>
             <div class="meta-info">
                 <span id="msg-room1">Current Usage</span>
-                <span>Threshold: 450</span>
+                <span>Threshold: 400</span>
             </div>
         </div>
 
@@ -118,7 +118,7 @@
         <div class="card leaderboard-card">
             <div class="leaderboard-header">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                <span class="room-title" style="margin:0">Green Room Ranking</span>
+                <span class="room-title" style="margin:0">Green Room Ranking (by Efficiency)</span>
             </div>
             <ul class="leaderboard-list">
                 <li class="leaderboard-item winner-text">
@@ -126,21 +126,21 @@
                         <span class="rank-number">01</span>
                         <span>Room 303 (Office)</span>
                     </div>
-                    <span id="rank-1-val">0.00 kWh</span>
+                    <span id="rank-1-val">-- %</span>
                 </li>
                 <li class="leaderboard-item">
                     <div class="rank-info">
                         <span class="rank-number">02</span>
                         <span>Room 101 (Hostel)</span>
                     </div>
-                    <span id="rank-2-val">0.00 kWh</span>
+                    <span id="rank-2-val">-- %</span>
                 </li>
                 <li class="leaderboard-item">
                     <div class="rank-info">
                         <span class="rank-number">03</span>
                         <span>Room 202 (Classroom)</span>
                     </div>
-                    <span id="rank-3-val">0.00 kWh</span>
+                    <span id="rank-3-val">-- %</span>
                 </li>
             </ul>
         </div>
@@ -185,9 +185,9 @@
         }
 
         function updateRankings() {
-            document.getElementById('rank-1-val').textContent = '31.05 kWh';
-            document.getElementById('rank-2-val').textContent = '390.60 kWh';
-            document.getElementById('rank-3-val').textContent = '408.00 kWh';
+            document.getElementById('rank-1-val').textContent = '62.1% used (31/50 kWh)';
+            document.getElementById('rank-2-val').textContent = '78.1% used (391/500 kWh)';
+            document.getElementById('rank-3-val').textContent = '102.0% used (408/400 kWh)';
         }
 
         const clockEl = document.getElementById('clock');
@@ -212,7 +212,7 @@
             // Room 101 (Hostel) — Value computed by Java: 390.60 kWh
             setTimeout(() => animateData('room0', 390.60, 15000, 500), 500);
             // Room 202 (Classroom) — Value computed by Java: 408.00 kWh
-            setTimeout(() => animateData('room1', 408.00, 17000, 450), 500);
+            setTimeout(() => animateData('room1', 408.00, 17000, 400), 500);
             // Room 303 (Office) — Value computed by Java: 31.05 kWh
             setTimeout(() => animateData('room2', 31.05, 19000, 50), 500);
         });

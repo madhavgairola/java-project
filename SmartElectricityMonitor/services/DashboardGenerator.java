@@ -86,7 +86,7 @@ public class DashboardGenerator {
         html.append("        <div class=\"card leaderboard-card\">\n");
         html.append("            <div class=\"leaderboard-header\">\n");
         html.append("                <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"var(--text-secondary)\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"></polygon></svg>\n");
-        html.append("                <span class=\"room-title\" style=\"margin:0\">Green Room Ranking</span>\n");
+        html.append("                <span class=\"room-title\" style=\"margin:0\">Green Room Ranking (by Efficiency)</span>\n");
         html.append("            </div>\n");
         html.append("            <ul class=\"leaderboard-list\">\n");
 
@@ -98,7 +98,7 @@ public class DashboardGenerator {
             html.append("                        <span class=\"rank-number\">").append(String.format("%02d", rank)).append("</span>\n");
             html.append("                        <span>Room ").append(room.getRoomNumber()).append("</span>\n");
             html.append("                    </div>\n");
-            html.append("                    <span id=\"rank-").append(rank).append("-val\">0.00 kWh</span>\n");
+            html.append("                    <span id=\"rank-").append(rank).append("-val\">-- %</span>\n");
             html.append("                </li>\n");
             rank++;
         }
@@ -147,7 +147,9 @@ public class DashboardGenerator {
         rank = 1;
         for (Room room : sortedRooms) {
             html.append("            document.getElementById('rank-").append(rank).append("-val').textContent = '")
-                .append(String.format("%.2f", room.getTotalMonthlyConsumption())).append(" kWh';\n");
+                .append(String.format("%.1f", room.getUsagePercentage())).append("% used (")
+                .append(String.format("%.0f", room.getTotalMonthlyConsumption())).append("/")
+                .append(String.format("%.0f", room.getThreshold())).append(" kWh)';\n");
             rank++;
         }
         html.append("        }\n\n");

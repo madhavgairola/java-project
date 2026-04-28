@@ -35,7 +35,7 @@ public class Main {
         try {
             // Object Creation — each room has its own threshold based on room type
             Room hostelRoom = new Room("101 (Hostel)", 500);       // Hostel: AC + personal appliances
-            Room classRoom = new Room("202 (Classroom)", 450);     // Classroom: AC + multiple lights/fans
+            Room classRoom = new Room("202 (Classroom)", 400);     // Classroom: threshold exceeded!
             Room officeRoom = new Room("303 (Office)", 50);        // Office: only fans and lights
 
             // Adding appliances
