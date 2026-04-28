@@ -48,7 +48,7 @@ public class DashboardGenerator {
         html.append("    <div class=\"timer-bar\">\n");
         html.append("        <div class=\"live-dot\"></div>\n");
         html.append("        <span>MONTHLY SIMULATION</span>\n");
-        html.append("        <span id=\"clock\">Day 01 / 30</span>\n");
+        html.append("        <span id=\"clock\">01 April</span>\n");
         html.append("    </div>\n\n");
 
         // ---- ROOM CARDS (dynamically generated from Java data) ----
@@ -155,7 +155,7 @@ public class DashboardGenerator {
         }
         html.append("        }\n\n");
 
-        // Simulated 30-day monthly counter (matches monthly kWh calculation)
+        // Simulated 30-day monthly counter showing dates like "01 April" to "30 April"
         html.append("        const clockEl = document.getElementById('clock');\n");
         html.append("        const SIM_DURATION = 20000;\n");
         html.append("        const TOTAL_DAYS = 30;\n");
@@ -165,9 +165,9 @@ public class DashboardGenerator {
         html.append("            const elapsed = Date.now() - simStart;\n");
         html.append("            const progress = Math.min(elapsed / SIM_DURATION, 1);\n");
         html.append("            const currentDay = Math.max(1, Math.ceil(progress * TOTAL_DAYS));\n");
-        html.append("            clockEl.textContent = 'Day ' + String(currentDay).padStart(2, '0') + ' / 30';\n");
+        html.append("            clockEl.textContent = String(currentDay).padStart(2, '0') + ' April';\n");
         html.append("            if (progress < 1) { requestAnimationFrame(updateSimClock); }\n");
-        html.append("            else { clockEl.textContent = 'Day 30 / 30'; }\n");
+        html.append("            else { clockEl.textContent = '30 April'; }\n");
         html.append("        }\n\n");
 
         // DOMContentLoaded — inject real values from Java computation

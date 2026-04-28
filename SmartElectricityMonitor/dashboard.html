@@ -60,7 +60,7 @@
     <div class="timer-bar">
         <div class="live-dot"></div>
         <span>MONTHLY SIMULATION</span>
-        <span id="clock">Day 01 / 30</span>
+        <span id="clock">01 April</span>
     </div>
 
     <div class="dashboard-grid">
@@ -200,9 +200,9 @@
             const elapsed = Date.now() - simStart;
             const progress = Math.min(elapsed / SIM_DURATION, 1);
             const currentDay = Math.max(1, Math.ceil(progress * TOTAL_DAYS));
-            clockEl.textContent = 'Day ' + String(currentDay).padStart(2, '0') + ' / 30';
+            clockEl.textContent = String(currentDay).padStart(2, '0') + ' April';
             if (progress < 1) { requestAnimationFrame(updateSimClock); }
-            else { clockEl.textContent = 'Day 30 / 30'; }
+            else { clockEl.textContent = '30 April'; }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
