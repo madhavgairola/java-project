@@ -173,30 +173,6 @@ SmartElectricityMonitor/
 
 ---
 
-## 🎓 Viva Preparation Guide
-
-### Key Questions & Answers
-
-**Q: What is the purpose of this project?**
-> This project simulates a smart electricity monitoring system that promotes energy conservation on campus by tracking appliance usage, generating alerts for high consumption, and ranking rooms to encourage sustainable behavior.
-
-**Q: Why is Appliance an abstract class instead of a normal class?**
-> Because a generic "Appliance" doesn't exist in reality — you can only have a specific Fan, AC, or Light. Making it abstract prevents instantiation of a raw Appliance and forces every child class to define its own `calculateMonthlyConsumption()` logic.
-
-**Q: Why use HashMap instead of an Array for storing rooms?**
-> A `HashMap` allows instant O(1) lookup of any room by its room number as the key. In a real campus with thousands of rooms, this is far more efficient than looping through an entire array.
-
-**Q: How does multithreading help here?**
-> In real IoT systems, sensors monitor all rooms simultaneously, not one after another. By using threads, we simulate this concurrent monitoring behavior — each room is analyzed independently at the same time.
-
-**Q: What happens if someone enters invalid data?**
-> Our custom `InvalidUsageException` is thrown immediately. For example, if usage hours exceed 24 or power rating is negative, the system rejects the data before it can corrupt any calculations.
-
-**Q: Where is the innovation in this project?**
-> The Green Room Ranking system gamifies sustainability — rooms compete to be the most energy-efficient. Combined with real-time concurrent monitoring and automated alerts, this creates a smart campus concept that can scale to real-world IoT deployment.
-
----
-
 ## 🛠 Technologies Used
 
 - **Language:** Java (JDK 17+)
