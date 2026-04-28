@@ -179,8 +179,4 @@ SmartElectricityMonitor/
 - **Concepts:** Core OOP, Multithreading, Collections, Exception Handling
 - **Dashboard:** HTML5, CSS3, Vanilla JavaScript
 - **No external libraries or frameworks used**
----
 
-## 📄 License
-
-This project is built for academic purposes as part of a college PBL evaluation.
